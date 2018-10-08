@@ -1,12 +1,16 @@
 buildscript {
 	ext {
 		springBootVersion = '2.0.5.RELEASE'
+		gradleDockerVersion   = "1.2"
+		
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("se.transmode.gradle:gradle-docker:${gradleDockerVersion}")
+
 	}
 }
 
@@ -15,6 +19,9 @@ apply plugin: "jacoco"
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'docker'
+
+
 
 group = 'docbuddy'
 version = '0.0.1-SNAPSHOT'
@@ -58,6 +65,16 @@ jacocoTestReport {
     }
 }
 
+task buildDocker(type: Docker, dependsOn: build) {
+  applicationName = jar.baseName
+  dockerfile = file('src/main/docker/Dockerfile')
+  doFirst {
+    copy {
+      from jar
+      into stageDir
+    }
+  }
+}
 jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
