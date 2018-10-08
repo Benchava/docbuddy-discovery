@@ -19,11 +19,19 @@ env:
   - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in credentials.json.enc -out credentials.json -d
 - sudo apt-get install jq
 
 before_script:
 - wget -O ~/codacy-coverage-reporter-assembly-latest.jar https://github.com/codacy/codacy-coverage-reporter/releases/download/4.0.3/codacy-coverage-reporter-4.0.3-assembly.jar
+- gcloud version || true
+- if [ ! -d $HOME/google-cloud-sdk/bin ]; then
+  rm -rf $HOME/google-cloud-sdk;
+  curl https://sdk.cloud.google.com | bash > /dev/null;
+  fi
+- source $HOME/google-cloud-sdk/path.bash.inc
+- gcloud version
+- openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in credentials.json.enc -out credentials.json -d
+- gcloud auth activate-service-account --key-file credentials.json
 
 after_success:
 - gradle jacocoTestReport
