@@ -1,3 +1,6 @@
+sudo: required
+services:
+        docker
 language: java
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -28,3 +31,4 @@ before_script:
 after_success:
 - gradle jacocoTestReport
 - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r build/testCoverageReport/test/jacocoTestReport.xml
+- gradle buildDocker
