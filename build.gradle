@@ -56,9 +56,6 @@ test {
     }
 }
 
-docker {
-    name 'gcr.io/docbuddy-users-dev/discovery-service:latest'
-}
 
 jacocoTestReport {
     reports {
@@ -70,7 +67,8 @@ jacocoTestReport {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-  applicationName = "gcr.io/docbuddy-users-dev/discovery-service:latest"
+  applicationName = "gcr.io/docbuddy-users-dev/discovery-service" 
+  tagVersion = "latest"
   dockerfile = file('src/main/docker/Dockerfile')
   doFirst {
     copy {
