@@ -56,6 +56,10 @@ test {
     }
 }
 
+docker {
+    name 'gcr.io/docbuddy-users-dev/discovery-service:latest'
+}
+
 jacocoTestReport {
     reports {
         html.enabled = true
@@ -66,7 +70,7 @@ jacocoTestReport {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-  applicationName = jar.baseName
+  applicationName = "gcr.io/docbuddy-users-dev/discovery-service:latest"
   dockerfile = file('src/main/docker/Dockerfile')
   doFirst {
     copy {
@@ -75,6 +79,8 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
   }
 }
+
+
 jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
