@@ -69,6 +69,7 @@ jacocoTestReport {
 task buildDocker(type: Docker, dependsOn: build) {
   applicationName = "gcr.io/docbuddy-users-dev/discovery-service" 
   tagVersion = "latest"
+  project.group = ""
   dockerfile = file('src/main/docker/Dockerfile')
   doFirst {
     copy {
